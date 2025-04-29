@@ -29,6 +29,14 @@ async function fetchCustomers(accessToken) {
   return result;
 }
 
+
+async function getListofAccounts(accessToken) {
+  const result = await axios.post("/api/rutter-list-account", {
+    accessToken,
+  });
+  return result;
+}
+
 export default function Home() {
   const [dataFetched, setDataFetched] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
@@ -101,6 +109,19 @@ export default function Home() {
     }
   };
 
+  const handleGetListofAccounts = async () => {
+    setDataFetched(null);
+    setLoading(true);
+    try {
+      const accounts = await getListofAccounts(accessToken);
+      setDataFetched(accounts);
+    } catch (e) {
+      setErrorMessage(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading && !rutterConnected) {
     return (
       <div>
@@ -143,6 +164,13 @@ export default function Home() {
               <td>/customers</td>
               <td>
                 <Button onClick={handleGetCustomers}>Send request</Button>
+              </td>
+            </tr>
+            <tr>
+              <td>GET</td>
+              <td>/accounts</td>
+              <td>
+                <Button onClick={handleGetListofAccounts}>Send request</Button>
               </td>
             </tr>
           </tbody>
